@@ -4,21 +4,30 @@ exports.id = 888;
 exports.ids = [888];
 exports.modules = {
 
-/***/ 728:
+/***/ 541:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(114);
-/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_0__);
 
-const client = new _apollo_client__WEBPACK_IMPORTED_MODULE_0__.ApolloClient({
-    uri: "https://swapi-graphql.netlify.app/.netlify/functions/index",
-    cache: new _apollo_client__WEBPACK_IMPORTED_MODULE_0__.InMemoryCache()
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "Z": () => (/* binding */ apollo_client)
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (client);
+
+// EXTERNAL MODULE: external "@apollo/client"
+var client_ = __webpack_require__(114);
+;// CONCATENATED MODULE: ./src/constants/index.js
+const API_HOST = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
+
+;// CONCATENATED MODULE: ./src/apollo-client.js
+
+// @constants
+
+const client = new client_.ApolloClient({
+    uri: API_HOST,
+    cache: new client_.InMemoryCache()
+});
+/* harmony default export */ const apollo_client = (client);
 
 
 /***/ }),
@@ -112,7 +121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(114);
 /* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_apollo_client__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(728);
+/* harmony import */ var _apollo_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(541);
 /* harmony import */ var _lib_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(420);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_lib_i18n__WEBPACK_IMPORTED_MODULE_3__]);
 _lib_i18n__WEBPACK_IMPORTED_MODULE_3__ = (__webpack_async_dependencies__.then ? await __webpack_async_dependencies__ : __webpack_async_dependencies__)[0];

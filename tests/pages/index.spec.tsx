@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MockedProvider as ApolloMockedProvider } from '@apollo/client/testing';
 
-import Index from '../../src/pages/index';
+import Index from '../../src/pages';
 import { i18n, Language } from '../../src/lib/i18n';
 
 const renderWithApollo = (element: React.ReactElement) => {

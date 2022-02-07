@@ -1,7 +1,10 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
+// @constants
+import {API_HOST} from './constants';
+
 const client = new ApolloClient({
-    uri: "https://swapi-graphql.netlify.app/.netlify/functions/index",
+    uri: API_HOST,
     cache: new InMemoryCache(),
 });
 
