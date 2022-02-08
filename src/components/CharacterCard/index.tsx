@@ -15,14 +15,14 @@ interface ICharacter {
 
 interface ICharacterProps {
     character: ICharacter,
-    onClick: () => void,
+    onClick: (id: string) => void,
 };
 
-const CharacterCard: React.FC<ICharacterProps> = ({character}) => {
+const CharacterCard: React.FC<ICharacterProps> = ({character, onClick}) => {
 
     return (
         <li key={character.id}>
-            <Button style={{color: COLORS.primary}}>
+            <Button style={{color: COLORS.primary}} onClick={() => onClick(character.id)}>
                 <Typography variant="h4">
                     {character.name}
                 </Typography>

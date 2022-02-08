@@ -4,8 +4,6 @@ import { ApolloProvider } from '@apollo/client';
 import client from "../apollo-client";
 
 import '../lib/i18n';
-import { useApollo } from '../lib/apollo';
-
 import 'normalize.css/normalize.css';
 
 const App: NextPage<AppProps> = ({ Component, pageProps }) => {
