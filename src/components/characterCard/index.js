@@ -2,15 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-// @types
-import { ICharacter } from '../../types';
-
-interface ICharacterProps {
-    character: ICharacter,
-    onClick: (id: string) => void,
-};
-
-const CharacterCard: React.FC<ICharacterProps> = ({character, onClick}) => {
+const CharacterCard = ({character, onClick}) => {
 
     return (
         <li key={character.id}>

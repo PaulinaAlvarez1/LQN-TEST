@@ -3,22 +3,12 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import CSS from 'csstype';
 import PublicIcon from '@mui/icons-material/Public';
 
 // @theme
 import { COLORS } from '../../theme';
 
-// @types
-import { ICharacter } from '../../types';
-
-interface ICharacterDetailModalProps {
-    show: boolean,
-    characterDetail: ICharacter,
-    handleClose: () => void
-}
-
-const CharacterDetailModal: React.FC<ICharacterDetailModalProps> = ({show, characterDetail, handleClose}) => {
+const CharacterDetailModal = ({show, characterDetail, handleClose}) => {
     const modalContainerStyle = {
         position: 'absolute',
         maxHeight: '100vh',
@@ -35,7 +25,7 @@ const CharacterDetailModal: React.FC<ICharacterDetailModalProps> = ({show, chara
         overflowY: 'scroll',
       };
 
-      const titleStyle: CSS.Properties = {
+      const titleStyle = {
         alignSelf: 'center'
       }
 
@@ -49,7 +39,7 @@ const CharacterDetailModal: React.FC<ICharacterDetailModalProps> = ({show, chara
         display: 'flex',
     };
 
-    const planetContainerStyle: CSS.Properties = {
+    const planetContainerStyle = {
         display: 'flex',
         flexWrap: 'wrap',
     };

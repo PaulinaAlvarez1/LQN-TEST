@@ -1,10 +1,4 @@
-import type { NextPage } from 'next';
-
-interface ErrorPageProps {
-  statusCode: number;
-}
-
-const ErrorPage: NextPage<ErrorPageProps> = ({ statusCode }) => {
+const ErrorPage = ({ statusCode }) => {
   return (
     <div>
       {statusCode

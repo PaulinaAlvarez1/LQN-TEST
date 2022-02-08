@@ -1,10 +1,8 @@
 // @vendors
 import React, {useState, useEffect} from 'react'
-import type { NextPage } from 'next';
 import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router'
 import Lottie from 'react-lottie';
-import CSS from 'csstype';
 
 // @animations
 import animationData from '../assets/lotties/lf20_gn25stii.json';
@@ -29,13 +27,13 @@ const defaultOptions = {
   }
 };
 
-const HomePage: NextPage = () => {
+const HomePage = () => {
   const { error, data, loading } = useQuery(CHARACTERS_QUERY);
-  const [openCharacterDetail, setOpenCharacterDetail] = useState<boolean>(false);
-  const [characterDetail, setCharacterDetail] = useState<any>(null);
+  const [openCharacterDetail, setOpenCharacterDetail] = useState(false);
+  const [characterDetail, setCharacterDetail] = useState(null);
   const router = useRouter()
 
-  const handleOpenCharacterDetail = (id: string) => {
+  const handleOpenCharacterDetail = (id) => {
     router.push(`/?id=${id}`, undefined, { shallow: true })
   }
 
@@ -70,7 +68,7 @@ const HomePage: NextPage = () => {
       content = (
         <ul style={ulStyles}>
           {
-            data?.allPeople.people.map((character: any) => 
+            data?.allPeople.people.map((character) => 
               <CharacterCard
                 character={character}
                 onClick={handleOpenCharacterDetail}
@@ -92,7 +90,7 @@ const HomePage: NextPage = () => {
     return content;
   }
 
-  const mainStyles: CSS.Properties = {
+  const mainStyles = {
       display: 'flex',
       flex: 1,
       flexDirection: 'column',
@@ -100,7 +98,7 @@ const HomePage: NextPage = () => {
       background: 'black'
     }
 
-  const ulStyles: CSS.Properties = {
+  const ulStyles = {
     position: 'relative',
     textAlign: 'center',
     listStyleType: 'none',
