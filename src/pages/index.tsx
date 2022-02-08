@@ -1,35 +1,98 @@
-import React, {useEffect, useState} from 'react'
+// @vendors
+import React, {useState, useEffect} from 'react'
 import type { NextPage } from 'next';
-import { gql, useQuery } from '@apollo/client';
-import CircularProgress from '@mui/material/CircularProgress';
+import { useQuery } from '@apollo/client';
+import { useRouter } from 'next/router'
+import Lottie from 'react-lottie';
 import CSS from 'csstype';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 
+// @animations
+import animationData from '../assets/lotties/lf20_gn25stii.json';
+
+// @api
+import {CHARACTERS_QUERY} from '../api';
 
 // @components
-import CharacterCard from '../components/CharacterCard';
+import CharacterCard from '../components/characterCard';
+import ModalCharacterDetail from '../components/characterDetailModal';
 
-export const CHARACTERS_QUERY = gql`
-  query {
-    allPeople {
-      people {
-        name,
-        id
-      }
-    }
+// @constants
+import { START_WARS_IMAGE } from '../constants';
+import { Typography } from '@mui/material';
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice"
   }
-`
+};
 
 const HomePage: NextPage = () => {
   const { error, data, loading } = useQuery(CHARACTERS_QUERY);
   const [openCharacterDetail, setOpenCharacterDetail] = useState<boolean>(false);
-  const handleOpenCharacterDetail = () => setOpenCharacterDetail(true);
-  const handleCloseCharacterDetail = () => setOpenCharacterDetail(false);
+  const [characterDetail, setCharacterDetail] = useState<any>(null);
+  const router = useRouter()
 
-  const styles: CSS.Properties = {
+  const handleOpenCharacterDetail = (id: string) => {
+    router.push(`/?id=${id}`, undefined, { shallow: true })
+  }
+
+  const handleCloseCharacterDetail = () => {
+    setOpenCharacterDetail(false);
+  }
+
+  useEffect(() => {
+    if (router.query.id) {
+      const detailCharacter = data?.allPeople.people.find(person => person.id === router.query.id);
+      if (detailCharacter) {
+        setCharacterDetail(detailCharacter);
+        setOpenCharacterDetail(true);
+      }
+    }
+  }, [router.query.id, data])
+
+  const renderContent = () => {
+    let content;
+
+    if (loading) {
+      content = (
+        <Lottie 
+          options={defaultOptions}
+            height={300}
+            width={400}
+          />
+      );
+    }
+
+    if (data) {
+      content = (
+        <ul style={ulStyles}>
+          {
+            data?.allPeople.people.map((character: any) => 
+              <CharacterCard
+                character={character}
+                onClick={handleOpenCharacterDetail}
+              />
+            )
+          }
+        </ul>
+      )
+    }
+
+    if (error) {
+      content = (
+        <Typography color="error">
+          Error loading information, try later
+        </Typography>
+      )
+    }
+
+    return content;
+  }
+
+  const mainStyles: CSS.Properties = {
       display: 'flex',
       flex: 1,
       flexDirection: 'column',
@@ -41,36 +104,24 @@ const HomePage: NextPage = () => {
     position: 'relative',
     textAlign: 'center',
     listStyleType: 'none',
-    transformOrigin: '50% 100%',
-    transform: 'rotateX(46deg) translateZ(-100px)',
     margin: 0,
     padding: 0,
   }
 
-  console.log(loading, data, 'graphql')
+  const headerImageStyles = {
+    width: 400,
+    height: 400,
+  }
+
   return (
-    <div style={styles}>
-      <img style={{width: 400, height: 400}} src="https://yt3.ggpht.com/ytc/AKedOLSe-xFPeYa1w2FH8cnY_cludN8Hg0LbIz8iqhhJww=s900-c-k-c0x00ffffff-no-rj" />
-      {loading && <CircularProgress style={{color: 'white'}} />}
-      <ul style={ulStyles}>
-        {data?.allPeople.people.map((character: any) => <CharacterCard character={character} onClick={handleCloseCharacterDetail}/>)}
-      </ul>
-      {error && <p>Error loading information, try later</p>}
-      <Modal
-        open={openCharacterDetail}
-        onClose={handleCloseCharacterDetail}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={ulStyles}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
+    <div style={mainStyles}>
+      <img style={headerImageStyles} src={START_WARS_IMAGE} />
+      {renderContent()}
+      <ModalCharacterDetail
+        characterDetail={characterDetail}
+        show={openCharacterDetail}
+        handleClose={handleCloseCharacterDetail}
+      />
     </div>
   );
 };
