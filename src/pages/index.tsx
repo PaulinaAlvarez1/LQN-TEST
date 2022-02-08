@@ -1,47 +1,33 @@
 // @vendors
 import React, {useState, useEffect} from 'react'
 import type { NextPage } from 'next';
-import { gql, useQuery } from '@apollo/client';
-import CircularProgress from '@mui/material/CircularProgress';
-import CSS from 'csstype';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router'
+import Lottie from 'react-lottie';
+import CSS from 'csstype';
+
+// @animations
+import animationData from '../assets/lotties/lf20_gn25stii.json';
+
+// @api
+import {CHARACTERS_QUERY} from '../api';
 
 // @components
-import CharacterCard from '../components/CharacterCard';
-
-// @theme
-import { COLORS } from '../theme';
+import CharacterCard from '../components/characterCard';
+import ModalCharacterDetail from '../components/characterDetailModal';
 
 // @constants
 import { START_WARS_IMAGE } from '../constants';
+import { Typography } from '@mui/material';
 
-export const CHARACTERS_QUERY = gql`
-  query {
-    allPeople {
-      people {
-        id,
-        gender,
-        name,
-        filmConnection {
-          films {
-            id,
-            title,
-            director,
-            planetConnection {
-              planets {
-                name,
-                population
-              }
-            }
-          }
-        }
-      }
-    }
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice"
   }
-`
+};
 
 const HomePage: NextPage = () => {
   const { error, data, loading } = useQuery(CHARACTERS_QUERY);
@@ -51,6 +37,10 @@ const HomePage: NextPage = () => {
 
   const handleOpenCharacterDetail = (id: string) => {
     router.push(`/?id=${id}`, undefined, { shallow: true })
+  }
+
+  const handleCloseCharacterDetail = () => {
+    setOpenCharacterDetail(false);
   }
 
   useEffect(() => {
@@ -63,8 +53,45 @@ const HomePage: NextPage = () => {
     }
   }, [router.query.id, data])
 
+  const renderContent = () => {
+    let content;
 
-  const handleCloseCharacterDetail = () => setOpenCharacterDetail(false);
+    if (loading) {
+      content = (
+        <Lottie 
+          options={defaultOptions}
+            height={300}
+            width={400}
+          />
+      );
+    }
+
+    if (data) {
+      content = (
+        <ul style={ulStyles}>
+          {
+            data?.allPeople.people.map((character: any) => 
+              <CharacterCard
+                character={character}
+                onClick={handleOpenCharacterDetail}
+              />
+            )
+          }
+        </ul>
+      )
+    }
+
+    if (error) {
+      content = (
+        <Typography color="error">
+          Error loading information, try later
+        </Typography>
+      )
+    }
+
+    return content;
+  }
+
   const mainStyles: CSS.Properties = {
       display: 'flex',
       flex: 1,
@@ -77,57 +104,24 @@ const HomePage: NextPage = () => {
     position: 'relative',
     textAlign: 'center',
     listStyleType: 'none',
-    // transformOrigin: '50% 100%',
-    // transform: 'rotateX(46deg) translateZ(-100px)',
     margin: 0,
     padding: 0,
   }
 
-  const modalContainerStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+  const headerImageStyles = {
     width: 400,
-    bgcolor: 'rgba(0, 0, 0, 0.8)',
-    border: `1px solid ${COLORS.primary}`,
-    boxShadow: 24,
-    p: 4,
-    display: 'flex',
-    flexDirection: 'column',
-  };
+    height: 400,
+  }
 
   return (
     <div style={mainStyles}>
-      <img style={{width: 400, height: 400}} src={START_WARS_IMAGE} />
-      {loading && <CircularProgress style={{color: 'white'}} />}
-      <ul style={ulStyles}>
-        {data?.allPeople.people.map((character: any) => <CharacterCard character={character} onClick={handleOpenCharacterDetail} />)}
-      </ul>
-      {error && <p>Error loading information, try later</p>}
-      <Modal
-        open={openCharacterDetail}
-        onClose={handleCloseCharacterDetail}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalContainerStyle}>
-          <Typography variant="h6" component="h2" color={COLORS.primary} style={{alignSelf: 'center'}}>
-            {characterDetail?.name} 
-          </Typography>
-          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }} color={COLORS.primary}>
-            Films {characterDetail?.filmConnection.films.map(film => <>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }} color={COLORS.primary}>
-                {film.title}
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }} color={COLORS.primary}>
-                Directed by: {film.director}
-              </Typography>
-              {film.planetConnection.planets.map(planet => <Typography id="modal-modal-description" sx={{ mt: 2 }} color={COLORS.primary}>{planet.name}</Typography>)}
-            </>)}
-          </Typography> */}
-        </Box>
-      </Modal>
+      <img style={headerImageStyles} src={START_WARS_IMAGE} />
+      {renderContent()}
+      <ModalCharacterDetail
+        characterDetail={characterDetail}
+        show={openCharacterDetail}
+        handleClose={handleCloseCharacterDetail}
+      />
     </div>
   );
 };
